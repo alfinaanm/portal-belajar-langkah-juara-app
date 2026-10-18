@@ -25,7 +25,7 @@ const db = getFirestore(app);
 const seedData = {
   users: [
     {
-      _id: "admin-arif",
+      _id: "YpC7uUD9KbOgRZY5M0TKla1VXaY2",
       nama: "Pak Arif",
       email: "arif@langkahjuara.id",
       noHp: "081134567895",
@@ -35,7 +35,7 @@ const seedData = {
       dibuatPada: Timestamp.fromDate(new Date("2026-08-01T08:00:00Z")),
     },
     {
-      _id: "staf-fira",
+      _id: "TCmIrpZrPqggkkzHsSvTmkGyNND3",
       nama: "Kak Fira",
       email: "fira@langkahjuara.id",
       noHp: "085234567892",
@@ -45,7 +45,7 @@ const seedData = {
       dibuatPada: Timestamp.fromDate(new Date("2026-08-15T08:00:00Z")),
     },
     {
-      _id: "tutor-dimas",
+      _id: "z0YJao5F4oO2OHxO3GYMgI6tyPo2",
       nama: "Kak Dimas",
       email: "dimas@langkahjuara.id",
       noHp: "087734567893",
@@ -65,7 +65,7 @@ const seedData = {
       dibuatPada: Timestamp.fromDate(new Date("2026-08-12T08:00:00Z")),
     },
     {
-      _id: "siswa-raka",
+      _id: "pquOnyOCs3QbyGweCkHuaWqbp273",
       nama: "Raka Pratama",
       email: "raka@langkahjuara.id",
       noHp: "081234567890",
@@ -171,8 +171,8 @@ const seedData = {
       _id: "kelas-utbk-a",
       nama: "Intensif UTBK A",
       programId: "prog-utbk",
-      tutorId: "tutor-dimas",
-      siswaIds: ["siswa-raka"],
+      tutorId: "z0YJao5F4oO2OHxO3GYMgI6tyPo2",
+      siswaIds: ["pquOnyOCs3QbyGweCkHuaWqbp273"],
       hari: "Selasa",
       jam: "16.00",
       tempat: "Ruang 2",
