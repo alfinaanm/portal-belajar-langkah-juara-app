@@ -20,9 +20,16 @@
 # production
 /build
 
-# misc
+# misc & credentials
 .DS_Store
 *.pem
+*.key
+*.cert
+*.crt
+serviceAccountKey*.json
+*firebase-adminsdk*.json
+credentials.json
+client_secret*.json
 
 # debug
 npm-debug.log*
@@ -30,8 +37,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files
+.env
+.env.local
+.env.*
+.env*.local
+!.env.example
 
 # vercel
 .vercel
