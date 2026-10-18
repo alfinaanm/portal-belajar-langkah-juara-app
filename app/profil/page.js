@@ -1,18 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AppShell from "@/components/AppShell";
+import { useAuth } from "@/context/AuthContext";
+import { db } from "@/lib/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 import { mockUsers } from "@/lib/mockData";
-import { User, Mail, Phone, Shield, CheckCircle, AlertCircle, Sparkles } from "lucide-react";
+import { User, Mail, Phone, Shield, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 
 export default function ProfilPage() {
-  const [currentUser, setCurrentUser] = useState(mockUsers[0]); // Raka Pratama (siswa)
-  const [nama, setNama] = useState(currentUser.nama);
-  const [noHp, setNoHp] = useState(currentUser.noHp);
-  const [noHpOrangTua, setNoHpOrangTua] = useState(currentUser.noHpOrangTua || "");
-  const [pesan, setPesan] = useState({ tipe: "", teks: "" });
+  const { user, userProfile, loading } = useAuth();
 
-  const handleSimpan = (e) => {
+  const [nama, setNama] = useState("");
+  const [noHp, setNoHp] = useState("");
+  const [noHpOrangTua, setNoHpOrangTua] = useState("");
+  const [pesan, setPesan] = useState({ tipe: "", teks: "" });
+  const [saving, setSaving] = useState(false);
+
+  // Sinkronisasi data form dengan data profil aktif
+  useEffect(() => {
+    if (userProfile) {
+      setNama(userProfile.nama || "");
+      setNoHp(userProfile.noHp || "");
+      setNoHpOrangTua(userProfile.noHpOrangTua || "");
+    } else if (!loading) {
+      // Fallback demo mock user jika belum login
+      const fallback = mockUsers[0];
+      setNama(fallback.nama);
+      setNoHp(fallback.noHp);
+      setNoHpOrangTua(fallback.noHpOrangTua || "");
+    }
+  }, [userProfile, loading]);
+
+  const activeRole = userProfile?.role || "siswa";
+  const activeEmail = userProfile?.email || user?.email || mockUsers[0].email;
+
+  const handleSimpan = async (e) => {
     e.preventDefault();
 
     // Validasi Bab 4.6: nomor HP hanya angka, 10-13 digit, diawali 08
@@ -26,7 +49,7 @@ export default function ProfilPage() {
       return;
     }
 
-    if (currentUser.role === "siswa" && noHpOrangTua && !hpRegex.test(noHpOrangTua)) {
+    if (activeRole === "siswa" && noHpOrangTua && !hpRegex.test(noHpOrangTua)) {
       setPesan({
         tipe: "error",
         teks: "Nomor HP Orang Tua harus berupa angka 10 s.d 13 digit dan wajib diawali '08'.",
@@ -34,19 +57,37 @@ export default function ProfilPage() {
       return;
     }
 
-    setCurrentUser({
-      ...currentUser,
-      nama,
-      noHp,
-      noHpOrangTua: currentUser.role === "siswa" ? noHpOrangTua : currentUser.noHpOrangTua,
-    });
+    setSaving(true);
+    setPesan({ tipe: "", teks: "" });
 
-    setPesan({
-      tipe: "success",
-      teks: "Profil berhasil diperbarui sesuai aturan Bab 4.6 PRD!",
-    });
+    try {
+      if (user?.uid) {
+        // Simpan langsung ke dokumen users/{uid} di Firestore
+        const userDocRef = doc(db, "users", user.uid);
+        const updates = {
+          nama: nama.trim(),
+          noHp: noHp.trim(),
+        };
+        if (activeRole === "siswa") {
+          updates.noHpOrangTua = noHpOrangTua.trim();
+        }
 
-    setTimeout(() => setPesan({ tipe: "", teks: "" }), 5000);
+        await updateDoc(userDocRef, updates);
+      }
+
+      setPesan({
+        tipe: "success",
+        teks: "Profil berhasil diperbarui di Firestore sesuai aturan Bab 4.6 PRD!",
+      });
+    } catch (err) {
+      setPesan({
+        tipe: "error",
+        teks: err.message || "Gagal memperbarui profil di Firestore.",
+      });
+    } finally {
+      setSaving(false);
+      setTimeout(() => setPesan({ tipe: "", teks: "" }), 5000);
+    }
   };
 
   return (
@@ -93,7 +134,7 @@ export default function ProfilPage() {
                 </div>
                 <input
                   type="email"
-                  value={currentUser.email}
+                  value={activeEmail}
                   disabled
                   className="w-full pl-10 pr-3.5 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-sm text-[#5A6B78] cursor-not-allowed"
                 />
@@ -111,7 +152,7 @@ export default function ProfilPage() {
                 </div>
                 <input
                   type="text"
-                  value={currentUser.role}
+                  value={activeRole}
                   disabled
                   className="w-full pl-10 pr-3.5 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-sm text-[#5A6B78] font-bold uppercase cursor-not-allowed"
                 />
@@ -131,7 +172,8 @@ export default function ProfilPage() {
                   type="text"
                   value={nama}
                   onChange={(e) => setNama(e.target.value)}
-                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition"
+                  disabled={saving}
+                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition disabled:opacity-60"
                   required
                 />
               </div>
@@ -140,7 +182,7 @@ export default function ProfilPage() {
             {/* Nomor HP (Bisa diubah) */}
             <div>
               <label className="block text-xs font-semibold text-[#1F2937] uppercase tracking-wider mb-1.5">
-                Nomor HP * (10-13 Digit, diawali 08)
+                Nomor HP (10-13 Digit, diawali 08, boleh kosong)
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -151,17 +193,17 @@ export default function ProfilPage() {
                   value={noHp}
                   onChange={(e) => setNoHp(e.target.value)}
                   placeholder="081234567890"
-                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] tabular-nums focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition"
-                  required
+                  disabled={saving}
+                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] tabular-nums focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition disabled:opacity-60"
                 />
               </div>
             </div>
 
             {/* Nomor HP Orang Tua (Khusus Siswa) */}
-            {currentUser.role === "siswa" && (
+            {activeRole === "siswa" && (
               <div>
                 <label className="block text-xs font-semibold text-[#1F2937] uppercase tracking-wider mb-1.5">
-                  Nomor HP Orang Tua * (10-13 Digit, diawali 08)
+                  Nomor HP Orang Tua (10-13 Digit, diawali 08, boleh kosong)
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -172,8 +214,8 @@ export default function ProfilPage() {
                     value={noHpOrangTua}
                     onChange={(e) => setNoHpOrangTua(e.target.value)}
                     placeholder="081298765432"
-                    className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] tabular-nums focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition"
-                    required
+                    disabled={saving}
+                    className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] tabular-nums focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition disabled:opacity-60"
                   />
                 </div>
                 <p className="text-xs text-[#5A6B78] mt-1">
@@ -185,9 +227,17 @@ export default function ProfilPage() {
             <div className="pt-3">
               <button
                 type="submit"
-                className="w-full sm:w-auto px-6 py-2.5 bg-[#EA580C] hover:bg-orange-700 text-white font-semibold rounded-xl text-sm shadow-xs transition"
+                disabled={saving}
+                className="w-full sm:w-auto px-6 py-2.5 bg-[#EA580C] hover:bg-orange-700 text-white font-semibold rounded-xl text-sm shadow-xs transition flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
               >
-                Simpan Perubahan Profil
+                {saving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Menyimpan...</span>
+                  </>
+                ) : (
+                  <span>Simpan Perubahan Profil</span>
+                )}
               </button>
             </div>
           </form>

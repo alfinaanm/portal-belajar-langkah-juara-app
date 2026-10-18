@@ -2,30 +2,57 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { GraduationCap, ArrowRight, Shield, Mail, Lock, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { GraduationCap, Mail, Lock, AlertCircle, Loader2 } from "lucide-react";
+import { useAuth, getRoleDashboardPath } from "@/context/AuthContext";
 
 export default function MasukPage() {
   const router = useRouter();
+  const { user, userProfile, loading, loginWithEmail, loginWithGoogle, authError, clearAuthError } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [info, setInfo] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  // Jika sudah masuk, arahkan otomatis sesuai peran profil
+  useEffect(() => {
+    if (!loading && user && userProfile) {
+      const destination = getRoleDashboardPath(userProfile.role);
+      router.replace(destination);
+    }
+  }, [user, userProfile, loading, router]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage("");
+    clearAuthError();
+
     if (!email || !password) {
-      setInfo("Email dan kata sandi wajib diisi.");
+      setErrorMessage("Email dan kata sandi wajib diisi.");
       return;
     }
-    // Demo routing based on email name or role
-    if (email.includes("staf") || email.includes("fira")) {
-      router.push("/staf");
-    } else if (email.includes("tutor") || email.includes("dimas") || email.includes("nadia")) {
-      router.push("/tutor");
-    } else if (email.includes("admin") || email.includes("arif")) {
-      router.push("/admin");
-    } else {
-      router.push("/beranda");
+
+    setSubmitting(true);
+    try {
+      await loginWithEmail(email, password);
+      // Redirection akan ditangani oleh useEffect saat userProfile dimuat
+    } catch (err) {
+      setErrorMessage(err.message || "Gagal masuk. Periksa kembali email dan kata sandi Anda.");
+      setSubmitting(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setErrorMessage("");
+    clearAuthError();
+    setSubmitting(true);
+    try {
+      await loginWithGoogle();
+      // Redirection ditangani oleh useEffect saat userProfile dimuat
+    } catch (err) {
+      setErrorMessage(err.message || "Gagal masuk dengan akun Google.");
+      setSubmitting(false);
     }
   };
 
@@ -37,9 +64,9 @@ export default function MasukPage() {
             <GraduationCap className="w-7 h-7" />
           </div>
         </Link>
-        <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold text-[#1F2937]">
+        <h1 className="mt-4 text-2xl sm:text-3xl font-extrabold text-[#1F2937]">
           Masuk ke Portal Belajar
-        </h2>
+        </h1>
         <p className="mt-2 text-sm text-[#5A6B78]">
           Langkah Juara Makassar &bull; Bab 4.1 PRD
         </p>
@@ -47,9 +74,10 @@ export default function MasukPage() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-6 shadow-sm sm:rounded-3xl border border-slate-200/80 sm:px-10">
-          {info && (
-            <div className="mb-5 p-3.5 rounded-xl bg-orange-50 border border-orange-200 text-xs text-[#EA580C] font-medium leading-relaxed">
-              {info}
+          {(errorMessage || authError) && (
+            <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-medium leading-relaxed flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+              <span>{errorMessage || authError}</span>
             </div>
           )}
 
@@ -64,10 +92,12 @@ export default function MasukPage() {
                 </div>
                 <input
                   type="email"
-                  placeholder="nama@langkahjuara.id"
+                  id="login-email-input"
+                  placeholder="nama@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition"
+                  disabled={submitting}
+                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition disabled:opacity-60"
                   required
                 />
               </div>
@@ -83,10 +113,12 @@ export default function MasukPage() {
                 </div>
                 <input
                   type="password"
+                  id="login-password-input"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition"
+                  disabled={submitting}
+                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition disabled:opacity-60"
                   required
                 />
               </div>
@@ -94,9 +126,18 @@ export default function MasukPage() {
 
             <button
               type="submit"
-              className="w-full mt-2 flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-xs text-sm font-semibold text-white bg-[#EA580C] hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EA580C] transition"
+              id="login-submit-button"
+              disabled={submitting}
+              className="w-full mt-2 flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-xs text-sm font-semibold text-white bg-[#EA580C] hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EA580C] transition disabled:opacity-60 cursor-pointer"
             >
-              Masuk
+              {submitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Memproses Masuk...</span>
+                </>
+              ) : (
+                <span>Masuk</span>
+              )}
             </button>
           </form>
 
@@ -113,8 +154,10 @@ export default function MasukPage() {
             <div className="mt-6">
               <button
                 type="button"
-                onClick={() => router.push("/beranda")}
-                className="w-full inline-flex justify-center items-center gap-3 py-2.5 px-4 border border-slate-200 rounded-xl shadow-xs bg-white text-sm font-semibold text-[#1F2937] hover:bg-slate-50 transition"
+                id="login-google-button"
+                onClick={handleGoogleSignIn}
+                disabled={submitting}
+                className="w-full inline-flex justify-center items-center gap-3 py-2.5 px-4 border border-slate-200 rounded-xl shadow-xs bg-white text-sm font-semibold text-[#1F2937] hover:bg-slate-50 transition disabled:opacity-60 cursor-pointer"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path
@@ -135,43 +178,6 @@ export default function MasukPage() {
                   />
                 </svg>
                 Masuk dengan Google
-              </button>
-            </div>
-          </div>
-
-          {/* Quick role jump simulator for Tahap 2 */}
-          <div className="mt-6 pt-5 border-t border-slate-100">
-            <div className="text-xs font-semibold text-[#5A6B78] uppercase tracking-wider mb-2 text-center">
-              Pintas Demo Pengalihan Peran:
-            </div>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <button
-                type="button"
-                onClick={() => router.push("/beranda")}
-                className="p-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium rounded-lg text-left"
-              >
-                &rarr; Siswa (/beranda)
-              </button>
-              <button
-                type="button"
-                onClick={() => router.push("/staf")}
-                className="p-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium rounded-lg text-left"
-              >
-                &rarr; Staf (/staf)
-              </button>
-              <button
-                type="button"
-                onClick={() => router.push("/tutor")}
-                className="p-2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-medium rounded-lg text-left"
-              >
-                &rarr; Tutor (/tutor)
-              </button>
-              <button
-                type="button"
-                onClick={() => router.push("/admin")}
-                className="p-2 bg-amber-50 hover:bg-amber-100 text-amber-700 font-medium rounded-lg text-left"
-              >
-                &rarr; Admin (/admin)
               </button>
             </div>
           </div>

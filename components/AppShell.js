@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, Suspense } from "react";
 import {
   BookOpen,
@@ -24,6 +24,7 @@ import {
   BarChart3,
   ClipboardList,
 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 // Navigasi dikelompokkan sesuai Bab 3.1 PRD
 const navSections = [
@@ -84,6 +85,34 @@ const navSections = [
   },
 ];
 
+function getRoleLabel(role) {
+  switch (role) {
+    case "super_admin":
+      return "Super Admin";
+    case "staf":
+      return "Staf";
+    case "tutor":
+      return "Tutor";
+    case "siswa":
+    default:
+      return "Siswa";
+  }
+}
+
+function getRoleBadgeStyle(role) {
+  switch (role) {
+    case "super_admin":
+      return "bg-amber-300 text-amber-950 font-bold";
+    case "staf":
+      return "bg-emerald-200 text-emerald-950 font-semibold";
+    case "tutor":
+      return "bg-purple-200 text-purple-950 font-semibold";
+    case "siswa":
+    default:
+      return "bg-white/20 text-white font-medium";
+  }
+}
+
 function SidebarLinks({ onNavClick }) {
   const pathname = usePathname();
 
@@ -125,7 +154,18 @@ function SidebarLinks({ onNavClick }) {
 }
 
 export default function AppShell({ children }) {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, userProfile, loading, logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push("/masuk");
+    } catch (err) {
+      console.error("Gagal logout:", err);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F7F5F2]">
@@ -159,23 +199,81 @@ export default function AppShell({ children }) {
               </Link>
             </div>
 
-            {/* Banner Mode Preview */}
-            <div className="hidden md:flex items-center gap-3 bg-orange-700/60 px-3 py-1.5 rounded-lg text-xs text-orange-100 border border-orange-500/30">
-              <Sparkles className="w-4 h-4 text-amber-300" />
-              <span>
-                <strong>Mode Tahap 2:</strong> Semua halaman Bab 4 dapat dibuka bebas tanpa proteksi login
-              </span>
-            </div>
+            {/* Bilah Atas: Informasi Nama & Peran dari users/{uid} */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              {loading ? (
+                <div className="text-xs text-orange-200 animate-pulse px-3 py-1.5">
+                  Memuat akun...
+                </div>
+              ) : user && userProfile ? (
+                <div className="flex items-center gap-2 sm:gap-3">
+                  {/* Kartu Profil Pengguna Bilah Atas */}
+                  <div className="flex items-center gap-2 bg-black/15 hover:bg-black/20 px-3 py-1.5 rounded-xl border border-white/10 transition">
+                    <div className="w-7 h-7 rounded-lg bg-white/20 text-white flex items-center justify-center font-bold text-xs uppercase shrink-0">
+                      {(userProfile.nama || user?.displayName || user?.email || "U")[0]}
+                    </div>
+                    <div className="flex flex-col text-left">
+                      <span
+                        id="topbar-user-name"
+                        className="text-xs font-semibold leading-tight text-white truncate max-w-[110px] sm:max-w-[160px]"
+                        title={userProfile.nama || user?.displayName || user?.email}
+                      >
+                        {userProfile.nama || user?.displayName || user?.email}
+                      </span>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span
+                          id="topbar-user-role"
+                          className={`inline-block text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider ${getRoleBadgeStyle(
+                            userProfile.role
+                          )}`}
+                        >
+                          {getRoleLabel(userProfile.role)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
 
-            {/* Quick Links Header */}
-            <div className="flex items-center gap-2">
-              <Link
-                href="/profil"
-                className="flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-white font-medium transition"
-              >
-                <User className="w-4 h-4" />
-                <span className="hidden sm:inline">Profil Pengguna</span>
-              </Link>
+                  {/* Tombol Profil */}
+                  <Link
+                    href="/profil"
+                    id="topbar-profile-link"
+                    className="hidden sm:flex items-center gap-1.5 text-xs bg-white/10 hover:bg-white/20 px-2.5 py-2 rounded-xl text-white font-medium transition"
+                    title="Pengaturan Profil"
+                  >
+                    <User className="w-3.5 h-3.5" />
+                    <span>Profil</span>
+                  </Link>
+
+                  {/* Tombol Keluar */}
+                  <button
+                    type="button"
+                    id="topbar-logout-button"
+                    onClick={handleLogout}
+                    className="flex items-center gap-1.5 text-xs bg-red-600/80 hover:bg-red-700 px-2.5 py-2 rounded-xl text-white font-medium transition shadow-xs cursor-pointer"
+                    title="Keluar dari akun"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Keluar</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/masuk"
+                    id="topbar-login-link"
+                    className="text-xs bg-white/15 hover:bg-white/25 px-3 py-1.5 rounded-xl text-white font-semibold transition"
+                  >
+                    Masuk
+                  </Link>
+                  <Link
+                    href="/daftar"
+                    id="topbar-register-link"
+                    className="text-xs bg-white text-[#EA580C] hover:bg-orange-50 px-3 py-1.5 rounded-xl font-semibold shadow-xs transition"
+                  >
+                    Daftar
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -198,6 +296,31 @@ export default function AppShell({ children }) {
               <X className="w-5 h-5" />
             </button>
           </div>
+
+          {/* Kartu Identitas Akun di Sidebar Mobile */}
+          {user && userProfile && (
+            <div className="lg:hidden p-3 mb-3 bg-orange-50 rounded-xl border border-orange-200/60 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-[#EA580C] text-white flex items-center justify-center font-bold text-xs uppercase">
+                  {(userProfile.nama || user?.displayName || "U")[0]}
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-[#1F2937] leading-tight">
+                    {userProfile.nama}
+                  </div>
+                  <div className="text-[10px] text-[#5A6B78] uppercase font-semibold">
+                    {getRoleLabel(userProfile.role)}
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="text-xs text-red-600 hover:text-red-700 font-medium"
+              >
+                Keluar
+              </button>
+            </div>
+          )}
 
           <Suspense fallback={<div className="p-4 text-xs text-slate-400">Memuat navigasi...</div>}>
             <SidebarLinks onNavClick={() => setMobileMenuOpen(false)} />

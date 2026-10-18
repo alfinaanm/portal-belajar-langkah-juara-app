@@ -1,26 +1,65 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { GraduationCap, ArrowRight, ShieldCheck, Mail, Lock, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { GraduationCap, Mail, Lock, User, AlertCircle, Loader2 } from "lucide-react";
+import { useAuth, getRoleDashboardPath } from "@/context/AuthContext";
 
 export default function DaftarPage() {
+  const router = useRouter();
+  const { user, userProfile, loading, registerWithEmail, loginWithGoogle, authError, clearAuthError } = useAuth();
+
   const [nama, setNama] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [info, setInfo] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  // Jika sudah masuk, arahkan otomatis sesuai peran profil
+  useEffect(() => {
+    if (!loading && user && userProfile) {
+      const destination = getRoleDashboardPath(userProfile.role);
+      router.replace(destination);
+    }
+  }, [user, userProfile, loading, router]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!nama || !email || !password) {
-      setInfo("Semua kolom bertanda bintang (*) wajib diisi.");
+    setErrorMessage("");
+    clearAuthError();
+
+    if (!nama.trim() || !email.trim() || !password) {
+      setErrorMessage("Semua kolom bertanda bintang (*) wajib diisi.");
       return;
     }
+
     if (password.length < 6) {
-      setInfo("Kata sandi minimal 6 karakter.");
+      setErrorMessage("Kata sandi minimal 6 karakter.");
       return;
     }
-    setInfo("Pendaftaran berhasil! Dalam sistem nyata, akun otomatis dibuat dengan role 'siswa' dan diarahkan ke /beranda.");
+
+    setSubmitting(true);
+    try {
+      await registerWithEmail(nama, email, password);
+      // Redirection akan ditangani otomatis oleh useEffect menuju /beranda
+    } catch (err) {
+      setErrorMessage(err.message || "Gagal mendaftar. Silakan coba lagi.");
+      setSubmitting(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setErrorMessage("");
+    clearAuthError();
+    setSubmitting(true);
+    try {
+      await loginWithGoogle();
+      // Redirection akan ditangani otomatis oleh useEffect
+    } catch (err) {
+      setErrorMessage(err.message || "Gagal mendaftar dengan akun Google.");
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -31,9 +70,9 @@ export default function DaftarPage() {
             <GraduationCap className="w-7 h-7" />
           </div>
         </Link>
-        <h2 className="mt-4 text-2xl sm:text-3xl font-extrabold text-[#1F2937]">
+        <h1 className="mt-4 text-2xl sm:text-3xl font-extrabold text-[#1F2937]">
           Daftar Akun Siswa Baru
-        </h2>
+        </h1>
         <p className="mt-2 text-sm text-[#5A6B78]">
           Portal Belajar Langkah Juara Makassar (PRD 4.1)
         </p>
@@ -41,9 +80,10 @@ export default function DaftarPage() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-6 shadow-sm sm:rounded-3xl border border-slate-200/80 sm:px-10">
-          {info && (
-            <div className="mb-5 p-3.5 rounded-xl bg-orange-50 border border-orange-200 text-xs text-[#EA580C] font-medium leading-relaxed">
-              {info}
+          {(errorMessage || authError) && (
+            <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-medium leading-relaxed flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+              <span>{errorMessage || authError}</span>
             </div>
           )}
 
@@ -58,10 +98,12 @@ export default function DaftarPage() {
                 </div>
                 <input
                   type="text"
+                  id="register-name-input"
                   placeholder="Contoh: Salsa Billah"
                   value={nama}
                   onChange={(e) => setNama(e.target.value)}
-                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition"
+                  disabled={submitting}
+                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition disabled:opacity-60"
                   required
                 />
               </div>
@@ -77,10 +119,12 @@ export default function DaftarPage() {
                 </div>
                 <input
                   type="email"
+                  id="register-email-input"
                   placeholder="nama@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition"
+                  disabled={submitting}
+                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition disabled:opacity-60"
                   required
                 />
               </div>
@@ -96,10 +140,12 @@ export default function DaftarPage() {
                 </div>
                 <input
                   type="password"
+                  id="register-password-input"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition"
+                  disabled={submitting}
+                  className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition disabled:opacity-60"
                   required
                 />
               </div>
@@ -107,9 +153,18 @@ export default function DaftarPage() {
 
             <button
               type="submit"
-              className="w-full mt-2 flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-xs text-sm font-semibold text-white bg-[#EA580C] hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EA580C] transition"
+              id="register-submit-button"
+              disabled={submitting}
+              className="w-full mt-2 flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-xs text-sm font-semibold text-white bg-[#EA580C] hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EA580C] transition disabled:opacity-60 cursor-pointer"
             >
-              Daftar Sekarang
+              {submitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Mendaftarkan Akun...</span>
+                </>
+              ) : (
+                <span>Daftar Sekarang</span>
+              )}
             </button>
           </form>
 
@@ -126,8 +181,10 @@ export default function DaftarPage() {
             <div className="mt-6">
               <button
                 type="button"
-                onClick={() => setInfo("Dalam sistem nyata, Masuk dengan Google otomatis membuat profil siswa.")}
-                className="w-full inline-flex justify-center items-center gap-3 py-2.5 px-4 border border-slate-200 rounded-xl shadow-xs bg-white text-sm font-semibold text-[#1F2937] hover:bg-slate-50 transition"
+                id="register-google-button"
+                onClick={handleGoogleSignIn}
+                disabled={submitting}
+                className="w-full inline-flex justify-center items-center gap-3 py-2.5 px-4 border border-slate-200 rounded-xl shadow-xs bg-white text-sm font-semibold text-[#1F2937] hover:bg-slate-50 transition disabled:opacity-60 cursor-pointer"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path
