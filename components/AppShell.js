@@ -113,12 +113,22 @@ function getRoleBadgeStyle(role) {
   }
 }
 
-function SidebarLinks({ onNavClick }) {
+function SidebarLinks({ onNavClick, role }) {
   const pathname = usePathname();
+
+  // Sesuai Bab 2.3 & 2.4 PRD:
+  // Menu yang tidak boleh dibuka tidak ditampilkan sama sekali.
+  // Super Admin membuka semua modul peran lain ditambah modul Admin.
+  const visibleSections = navSections.filter((sec) => {
+    if (sec.roleKey === "public") return true;
+    if (role === "super_admin") return true;
+    if (!role) return false;
+    return sec.roleKey === role;
+  });
 
   return (
     <div className="space-y-6 pt-2">
-      {navSections.map((sec, idx) => (
+      {visibleSections.map((sec, idx) => (
         <div key={idx} className="space-y-1">
           <div className="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#5A6B78] flex items-center justify-between">
             <span>{sec.roleTitle}</span>
@@ -323,7 +333,7 @@ export default function AppShell({ children }) {
           )}
 
           <Suspense fallback={<div className="p-4 text-xs text-slate-400">Memuat navigasi...</div>}>
-            <SidebarLinks onNavClick={() => setMobileMenuOpen(false)} />
+            <SidebarLinks onNavClick={() => setMobileMenuOpen(false)} role={userProfile?.role} />
           </Suspense>
 
           <div className="mt-auto pt-6 border-t border-slate-100">
