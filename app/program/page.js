@@ -129,7 +129,7 @@ export default function ProgramPage() {
         <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#EA580C] mb-1">
             <Layers className="w-3.5 h-3.5" />
-            Katalog Program Belajar &bull; Bab 4.3 PRD (Firestore Langsung)
+            Katalog Program Belajar
           </div>
           <h1 className="text-2xl font-bold text-[#1F2937]">Pilihan Program Langkah Juara</h1>
           <p className="text-sm text-[#5A6B78] mt-1">
@@ -224,13 +224,12 @@ export default function ProgramPage() {
                           type="button"
                           disabled={isTerdaftar || submittingId === prog.id}
                           onClick={() => handleAjukan(prog)}
-                          className={`px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 ${
-                            isTerdaftar
-                              ? "bg-slate-100 text-slate-400 cursor-not-allowed"
-                              : submittingId === prog.id
+                          className={`px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 ${isTerdaftar
+                            ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                            : submittingId === prog.id
                               ? "bg-orange-300 text-white cursor-wait"
                               : "bg-[#EA580C] hover:bg-orange-700 text-white shadow-xs"
-                          }`}
+                            }`}
                         >
                           {submittingId === prog.id ? (
                             <>

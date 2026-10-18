@@ -172,7 +172,7 @@ function RincianKelasContent() {
             Segarkan
           </button>
           <span className="text-xs bg-orange-50 text-[#EA580C] px-3 py-1 rounded-full font-semibold">
-            PRD Bab 4.4 &bull; Rincian Kelas Siswa (Firestore)
+            Rincian Kelas Siswa
           </span>
         </div>
       </div>

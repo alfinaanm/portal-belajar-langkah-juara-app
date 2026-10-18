@@ -229,7 +229,7 @@ function TugasContent() {
             Segarkan
           </button>
           <span className="text-xs bg-orange-50 text-[#EA580C] px-3 py-1 rounded-full font-semibold">
-            PRD Bab 4.5 &bull; Pengumpulan & Nilai Siswa (Firestore)
+            Pengumpulan & Nilai Siswa
           </span>
         </div>
       </div>
@@ -340,7 +340,7 @@ function TugasContent() {
         <div className="bg-emerald-50/70 border border-emerald-200 p-6 rounded-2xl shadow-xs space-y-4 animate-fadeIn">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#15A66A]">
             <Award className="w-4 h-4" />
-            Hasil Penilaian Tutor Pengampu (Langsung dari Firestore)
+            Hasil Penilaian Tutor Pengampu
           </div>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-6">

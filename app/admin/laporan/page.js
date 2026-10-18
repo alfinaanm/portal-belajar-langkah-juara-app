@@ -55,7 +55,7 @@ function LaporanContent() {
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#EA580C] mb-1">
             <BarChart3 className="w-3.5 h-3.5" />
-            Laporan Rekapitulasi &bull; Bab 4.17 PRD
+            Laporan Rekapitulasi
           </div>
           <h1 className="text-2xl font-bold text-[#1F2937]">Rekapitulasi Operasional Bulanan</h1>
           <p className="text-sm text-[#5A6B78] mt-1">
@@ -189,10 +189,6 @@ function LaporanContent() {
             </tbody>
           </table>
         </div>
-      </div>
-
-      <div className="p-4 bg-slate-100 rounded-2xl text-xs text-[#5A6B78] flex items-center justify-between">
-        <span>Catatan PRD 4.17 & 9: Ekspor Excel dan PDF tidak termasuk di versi v1. Rekapitulasi cukup dibaca langsung dari layar.</span>
       </div>
     </div>
   );

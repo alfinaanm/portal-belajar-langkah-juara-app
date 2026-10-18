@@ -39,7 +39,7 @@ export default function DataSiswaPage() {
         <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#EA580C] mb-1">
             <Users className="w-3.5 h-3.5" />
-            Database Siswa &bull; Bab 4.10 PRD
+            Database Siswa
           </div>
           <h1 className="text-2xl font-bold text-[#1F2937]">Data Siswa & Kontak Orang Tua</h1>
           <p className="text-sm text-[#5A6B78] mt-1">
@@ -51,7 +51,7 @@ export default function DataSiswaPage() {
         <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-start gap-3 text-xs text-[#5A6B78]">
           <ShieldAlert className="w-4 h-4 text-[#EA580C] shrink-0 mt-0.5" />
           <div>
-            <strong>Ketentuan PRD Bab 4.10:</strong> Halaman ini berstatus <em>hanya untuk membaca</em>. Staf administrasi <strong>tidak bisa</strong> melihat atau mengubah nilai siswa di halaman mana pun.
+            Halaman ini berstatus <em>hanya untuk membaca</em>. Staf administrasi <strong>tidak bisa</strong> melihat atau mengubah nilai siswa di halaman mana pun.
           </div>
         </div>
 
@@ -63,7 +63,7 @@ export default function DataSiswaPage() {
             </div>
             <input
               type="text"
-              placeholder="Cari siswa berdasarkan nama (misal: Salsa, Raka)..."
+              placeholder="Cari siswa berdasarkan nama..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 bg-[#F7F5F2] border border-slate-200 rounded-xl text-xs text-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#EA580C] focus:bg-white transition"

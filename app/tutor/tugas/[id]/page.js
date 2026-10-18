@@ -211,7 +211,7 @@ function TugasDanNilaiContent() {
             Segarkan
           </button>
           <span className="text-xs bg-orange-50 text-[#EA580C] px-3 py-1 rounded-full font-semibold">
-            PRD Bab 4.13 &bull; Penilaian Tutor (Firestore)
+            Penilaian Tutor
           </span>
         </div>
       </div>

@@ -77,7 +77,7 @@ export default function ProfilPage() {
 
       setPesan({
         tipe: "success",
-        teks: "Profil berhasil diperbarui di Firestore sesuai aturan Bab 4.6 PRD!",
+        teks: "Profil Anda berhasil diperbarui!",
       });
     } catch (err) {
       setPesan({
@@ -96,7 +96,7 @@ export default function ProfilPage() {
         <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#EA580C] mb-1">
             <User className="w-3.5 h-3.5" />
-            Pengaturan Akun &bull; Bab 4.6 PRD
+            Pengaturan Akun
           </div>
           <h1 className="text-2xl font-bold text-[#1F2937]">Profil Pengguna</h1>
           <p className="text-sm text-[#5A6B78] mt-1">
@@ -106,11 +106,10 @@ export default function ProfilPage() {
 
         {pesan.teks && (
           <div
-            className={`p-4 rounded-xl text-xs font-semibold flex items-center gap-2.5 ${
-              pesan.tipe === "success"
-                ? "bg-emerald-50 text-[#15A66A] border border-emerald-200"
-                : "bg-red-50 text-[#E53935] border border-red-200"
-            }`}
+            className={`p-4 rounded-xl text-xs font-semibold flex items-center gap-2.5 ${pesan.tipe === "success"
+              ? "bg-emerald-50 text-[#15A66A] border border-emerald-200"
+              : "bg-red-50 text-[#E53935] border border-red-200"
+              }`}
           >
             {pesan.tipe === "success" ? (
               <CheckCircle className="w-4 h-4 shrink-0" />
@@ -144,7 +143,7 @@ export default function ProfilPage() {
             {/* Peran / Role (Readonly) */}
             <div>
               <label className="block text-xs font-semibold text-[#5A6B78] uppercase tracking-wider mb-1.5">
-                Peran Pengguna (Dikelola Super Admin)
+                Peran Pengguna
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">

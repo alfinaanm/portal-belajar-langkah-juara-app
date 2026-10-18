@@ -211,7 +211,7 @@ function RincianKelolaKelasContent() {
             Segarkan
           </button>
           <span className="text-xs bg-orange-50 text-[#EA580C] px-3 py-1 rounded-full font-semibold">
-            PRD Bab 4.9 &bull; Rincian Kelas Staf (Firestore)
+            Rincian Kelas
           </span>
         </div>
       </div>
@@ -312,7 +312,7 @@ function RincianKelolaKelasContent() {
               Tambah Siswa ke {kelas.nama}
             </h3>
             <p className="text-xs text-[#5A6B78] mb-4">
-              Sesuai Bab 4.9 PRD, hanya siswa dengan <strong>pendaftaran aktif</strong> untuk program &quot;{program?.nama}&quot; yang tampil pada pilihan.
+              Hanya siswa dengan <strong>pendaftaran aktif</strong> untuk program &quot;{program?.nama}&quot; yang tampil pada pilihan.
             </p>
 
             {calonSiswaAktif.length === 0 ? (

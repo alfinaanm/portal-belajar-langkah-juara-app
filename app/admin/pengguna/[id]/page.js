@@ -171,8 +171,7 @@ export default function UbahPenggunaPage() {
       }));
 
       setToast(
-        `Perubahan peran untuk "${targetUser.nama}" berhasil disimpan ke Firestore! Peran: ${role.toUpperCase()}, Status: ${
-          aktif ? "Aktif" : "Nonaktif"
+        `Perubahan peran untuk "${targetUser.nama}" berhasil disimpan ke Firestore! Peran: ${role.toUpperCase()}, Status: ${aktif ? "Aktif" : "Nonaktif"
         }.`
       );
     } catch (err) {
@@ -195,7 +194,7 @@ export default function UbahPenggunaPage() {
             Kembali ke Kelola Pengguna
           </Link>
           <span className="text-xs bg-orange-50 text-[#EA580C] px-3 py-1 rounded-full font-semibold border border-orange-200">
-            PRD Bab 4.15 &bull; Ubah Peran Pengguna
+            Ubah Peran Pengguna
           </span>
         </div>
 
@@ -239,11 +238,10 @@ export default function UbahPenggunaPage() {
                 ].map((item) => (
                   <label
                     key={item.key}
-                    className={`p-3.5 rounded-xl border cursor-pointer transition flex flex-col justify-between ${
-                      role === item.key
+                    className={`p-3.5 rounded-xl border cursor-pointer transition flex flex-col justify-between ${role === item.key
                         ? "border-[#EA580C] bg-orange-50/60 ring-2 ring-[#EA580C]/20"
                         : "border-slate-200 hover:border-slate-300 bg-white"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-bold text-[#1F2937]">{item.label}</span>
@@ -277,11 +275,10 @@ export default function UbahPenggunaPage() {
                 <button
                   type="button"
                   onClick={() => !isSuperAdminSelf && setAktif(true)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition ${
-                    aktif
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition ${aktif
                       ? "bg-emerald-50 text-[#15A66A] border-2 border-emerald-500 shadow-xs"
                       : "bg-[#F7F5F2] text-[#5A6B78] border border-slate-200 hover:bg-slate-200"
-                  }`}
+                    }`}
                 >
                   <UserCheck className="w-4 h-4" />
                   <span>Akun Aktif</span>
@@ -291,11 +288,10 @@ export default function UbahPenggunaPage() {
                   type="button"
                   onClick={() => !isSuperAdminSelf && setAktif(false)}
                   disabled={isSuperAdminSelf}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition ${
-                    !aktif
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition ${!aktif
                       ? "bg-red-50 text-[#E53935] border-2 border-red-500 shadow-xs"
                       : "bg-[#F7F5F2] text-[#5A6B78] border border-slate-200 hover:bg-slate-200"
-                  } ${isSuperAdminSelf ? "opacity-50 cursor-not-allowed" : ""}`}
+                    } ${isSuperAdminSelf ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   <UserX className="w-4 h-4" />
                   <span>Nonaktifkan Akun</span>

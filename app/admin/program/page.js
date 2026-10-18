@@ -74,7 +74,7 @@ export default function AdminProgramPage() {
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#EA580C] mb-1">
               <Layers className="w-3.5 h-3.5" />
-              Master Data &bull; Bab 4.16 PRD
+              Master Data Program
             </div>
             <h1 className="text-2xl font-bold text-[#1F2937]">Kelola Program Bimbel</h1>
             <p className="text-sm text-[#5A6B78] mt-1">
@@ -168,7 +168,7 @@ export default function AdminProgramPage() {
             <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-200">
               <h3 className="text-xl font-bold text-[#1F2937] mb-1">Tambah Program Belajar</h3>
               <p className="text-xs text-[#5A6B78] mb-4">
-                Sesuai PRD 4.16: Program yang sudah dipakai kelas tidak dihapus, cukup dimatikan status aktifnya.
+                Program yang sudah dipakai kelas tidak dihapus, cukup dimatikan status aktifnya.
               </p>
 
               {error && (

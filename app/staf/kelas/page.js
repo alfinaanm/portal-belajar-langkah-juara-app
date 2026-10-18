@@ -140,7 +140,7 @@ export default function KelolaKelasPage() {
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#EA580C] mb-1">
               <School className="w-3.5 h-3.5" />
-              Kelola Kelas Belajar &bull; Bab 4.9 PRD (Firestore Langsung)
+              Kelola Kelas Belajar
             </div>
             <h1 className="text-2xl font-bold text-[#1F2937]">Daftar Kelas Bimbel</h1>
             <p className="text-sm text-[#5A6B78] mt-1">

@@ -99,7 +99,7 @@ export default function DaftarPage() {
                 <input
                   type="text"
                   id="register-name-input"
-                  placeholder="Contoh: Salsa Billah"
+                  placeholder="Nama Lengkap Siswa"
                   value={nama}
                   onChange={(e) => setNama(e.target.value)}
                   disabled={submitting}

@@ -279,7 +279,7 @@ function KelasDiajarContent() {
             Segarkan
           </button>
           <span className="text-xs bg-orange-50 text-[#EA580C] px-3 py-1 rounded-full font-semibold">
-            PRD Bab 4.12 &bull; Kelas yang Diajar (Firestore)
+            Kelas yang Diajar
           </span>
         </div>
       </div>
@@ -657,11 +657,10 @@ function KelasDiajarContent() {
                     >
                       <div className="font-semibold text-[#1F2937]">{s.nama}</div>
                       <div
-                        className={`w-5 h-5 rounded-md flex items-center justify-center border transition ${
-                          isHadir
+                        className={`w-5 h-5 rounded-md flex items-center justify-center border transition ${isHadir
                             ? "bg-[#15A66A] border-[#15A66A] text-white"
                             : "border-slate-300 bg-white"
-                        }`}
+                          }`}
                       >
                         {isHadir && <CheckCircle className="w-4 h-4" />}
                       </div>

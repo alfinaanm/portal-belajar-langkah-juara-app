@@ -74,7 +74,7 @@ export default function DasborTutorPage() {
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#EA580C] mb-1">
               <School className="w-3.5 h-3.5" />
-              Dasbor Pengajar &bull; Bab 4.11 PRD (Firestore Langsung)
+              Dasbor Pengajar
             </div>
             <h1 className="text-2xl font-bold text-[#1F2937]">
               Dasbor Tutor: {namaTutor}

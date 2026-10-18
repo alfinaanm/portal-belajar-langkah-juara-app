@@ -123,7 +123,7 @@ export default function BerandaPage() {
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#EA580C] mb-1">
               <Sparkles className="w-3.5 h-3.5" />
-              Portal Siswa &bull; Beranda (PRD 4.2 - Firestore Langsung)
+              Portal Siswa
             </div>
             <h1 className="text-2xl font-bold text-[#1F2937]">Halo, {namaPengguna}! 👋</h1>
             <p className="text-sm text-[#5A6B78] mt-1">

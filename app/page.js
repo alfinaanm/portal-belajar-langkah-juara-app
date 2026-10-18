@@ -44,7 +44,7 @@ export default function Home() {
       ],
     },
     {
-      title: "Tutor Pengajar (4.11 - 4.13)",
+      title: "Tutor Pengajar",
       desc: "Antarmuka pengajar untuk membuat pertemuan, presensi, tugas, dan memberi nilai.",
       icon: School,
       color: "from-purple-500 to-violet-600",
@@ -55,7 +55,7 @@ export default function Home() {
       ],
     },
     {
-      title: "Super Admin (4.14 - 4.17)",
+      title: "Super Admin",
       desc: "Antarmuka pemilik bimbel untuk memantau metrik, kelola akun, program, dan laporan bulanan.",
       icon: BarChart3,
       color: "from-amber-500 to-orange-600",
@@ -77,15 +77,11 @@ export default function Home() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-[#EA580C] mb-4">
               <Sparkles className="w-3.5 h-3.5" />
-              Sesuai PRD Bimbel Langkah Juara Makassar
+              Bimbel Langkah Juara Makassar
             </div>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1F2937] tracking-tight">
               Portal Belajar <span className="text-[#EA580C]">Langkah Juara</span>
             </h1>
-            <p className="mt-3 text-base text-[#5A6B78] leading-relaxed">
-              Satu portal terpadu untuk siswa, staf administrasi, tutor, dan pemilik bimbel.
-              Semua rute halaman Bab 4 telah terpasang dengan palet warna resmi Bab 5.
-            </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href="/beranda"
@@ -98,13 +94,13 @@ export default function Home() {
                 href="/masuk"
                 className="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-[#1F2937] px-5 py-2.5 rounded-xl text-sm font-semibold transition"
               >
-                Halaman Masuk (4.1)
+                Halaman Masuk
               </Link>
               <Link
                 href="/daftar"
                 className="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-[#1F2937] px-5 py-2.5 rounded-xl text-sm font-semibold transition"
               >
-                Halaman Daftar (4.1)
+                Halaman Daftar
               </Link>
             </div>
           </div>
@@ -112,7 +108,7 @@ export default function Home() {
 
         {/* Directory Grid */}
         <div>
-          <h2 className="text-xl font-bold text-[#1F2937] mb-4">Peta Seluruh Halaman (Bab 4 PRD)</h2>
+          <h2 className="text-xl font-bold text-[#1F2937] mb-4">Peta Seluruh Halaman Portal</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {sections.map((sec, idx) => {
               const Icon = sec.icon;

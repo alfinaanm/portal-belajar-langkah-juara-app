@@ -68,7 +68,7 @@ export default function MasukPage() {
           Masuk ke Portal Belajar
         </h1>
         <p className="mt-2 text-sm text-[#5A6B78]">
-          Langkah Juara Makassar &bull; Bab 4.1 PRD
+          Langkah Juara Makassar
         </p>
       </div>
 

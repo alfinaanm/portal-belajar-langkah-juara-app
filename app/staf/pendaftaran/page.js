@@ -166,7 +166,7 @@ function PendaftaranContent() {
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#EA580C] mb-1">
             <Filter className="w-3.5 h-3.5" />
-            Verifikasi Pendaftaran &bull; Bab 4.8 PRD (Firestore Langsung)
+            Verifikasi Pendaftaran
           </div>
           <h1 className="text-2xl font-bold text-[#1F2937]">Kelola Pendaftaran Siswa</h1>
           <p className="text-sm text-[#5A6B78] mt-1">

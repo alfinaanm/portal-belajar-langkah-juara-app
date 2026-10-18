@@ -165,7 +165,7 @@ export default function KelolaPenggunaPage() {
           <div>
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#EA580C] mb-1">
               <Users className="w-3.5 h-3.5" />
-              Kelola Pengguna &bull; Bab 4.15 PRD
+              Kelola Pengguna
             </div>
             <h1 className="text-2xl font-bold text-[#1F2937]">Daftar Pengguna Firestore</h1>
             <p className="text-sm text-[#5A6B78] mt-1">
@@ -202,11 +202,10 @@ export default function KelolaPenggunaPage() {
                 key={r}
                 type="button"
                 onClick={() => setRoleFilter(r)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold uppercase transition shrink-0 ${
-                  roleFilter === r
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold uppercase transition shrink-0 ${roleFilter === r
                     ? "bg-[#EA580C] text-white shadow-xs"
                     : "bg-[#F7F5F2] text-[#5A6B78] hover:bg-slate-200"
-                }`}
+                  }`}
               >
                 {r.replace("_", " ")}
               </button>

@@ -29,47 +29,42 @@ import { useAuth } from "@/context/AuthContext";
 // Navigasi dikelompokkan sesuai Bab 3.1 PRD
 const navSections = [
   {
-    roleTitle: "Siswa (Raka / Salsa)",
+    roleTitle: "Siswa",
     roleKey: "siswa",
     badgeColor: "bg-blue-100 text-blue-800",
     items: [
       { label: "Beranda", href: "/beranda", icon: Home },
       { label: "Program", href: "/program", icon: Layers },
       { label: "Kelas Saya", href: "/kelas", icon: School },
-      { label: "Rincian Kelas (Contoh)", href: "/kelas/kelas-utbk-a", icon: BookOpen },
-      { label: "Tugas Siswa (Contoh)", href: "/tugas/tugas-pu-3", icon: FileText },
     ],
   },
   {
-    roleTitle: "Staf Administrasi (Kak Fira)",
+    roleTitle: "Staf Administrasi",
     roleKey: "staf",
     badgeColor: "bg-emerald-100 text-emerald-800",
     items: [
       { label: "Dasbor Staf", href: "/staf", icon: Home },
       { label: "Pendaftaran Siswa", href: "/staf/pendaftaran", icon: CheckCircle },
-      { label: "Kelola Kelas (Daftar)", href: "/staf/kelas", icon: School },
-      { label: "Kelola Kelas (Rincian)", href: "/staf/kelas/kelas-utbk-a", icon: Users },
+      { label: "Kelola Kelas", href: "/staf/kelas", icon: School },
       { label: "Data Siswa", href: "/staf/siswa", icon: ClipboardList },
     ],
   },
   {
-    roleTitle: "Tutor Pengajar (Kak Dimas / Kak Nadia)",
+    roleTitle: "Tutor Pengajar",
     roleKey: "tutor",
     badgeColor: "bg-purple-100 text-purple-800",
     items: [
       { label: "Dasbor Tutor", href: "/tutor", icon: Home },
-      { label: "Kelas yang Diajar (Rincian)", href: "/tutor/kelas/kelas-utbk-a", icon: School },
-      { label: "Tugas dan Nilai", href: "/tutor/tugas/tugas-pu-3", icon: FileText },
     ],
   },
   {
-    roleTitle: "Super Admin (Pak Arif)",
+    roleTitle: "Super Admin",
     roleKey: "super_admin",
     badgeColor: "bg-amber-100 text-amber-800",
     items: [
       { label: "Dasbor Admin", href: "/admin", icon: BarChart3 },
       { label: "Kelola Pengguna", href: "/admin/pengguna", icon: Users },
-      { label: "Program (Admin)", href: "/admin/program", icon: Layers },
+      { label: "Program", href: "/admin/program", icon: Layers },
       { label: "Laporan Bulanan", href: "/admin/laporan", icon: BarChart3 },
     ],
   },
@@ -335,19 +330,6 @@ export default function AppShell({ children }) {
           <Suspense fallback={<div className="p-4 text-xs text-slate-400">Memuat navigasi...</div>}>
             <SidebarLinks onNavClick={() => setMobileMenuOpen(false)} role={userProfile?.role} />
           </Suspense>
-
-          <div className="mt-auto pt-6 border-t border-slate-100">
-            <div className="p-3 bg-[#F7F5F2] rounded-xl text-xs text-[#5A6B78]">
-              <div className="font-semibold text-[#1F2937] mb-1">Palet Bab 5 PRD</div>
-              <div className="flex items-center gap-1.5">
-                <div className="w-4 h-4 rounded bg-[#EA580C]" title="Oranye Juara" />
-                <div className="w-4 h-4 rounded bg-[#F7F5F2] border" title="Latar" />
-                <div className="w-4 h-4 rounded bg-[#15A66A]" title="Aktif / Dinilai" />
-                <div className="w-4 h-4 rounded bg-[#F59E0B]" title="Menunggu" />
-                <div className="w-4 h-4 rounded bg-[#E53935]" title="Ditolak / Terlambat" />
-              </div>
-            </div>
-          </div>
         </aside>
 
         {/* Backdrop for Mobile */}
@@ -365,7 +347,7 @@ export default function AppShell({ children }) {
       {/* Footer */}
       <footer className="mt-auto border-t border-slate-200/60 bg-white py-4 text-center text-xs text-[#5A6B78]">
         <div className="max-w-7xl mx-auto px-4">
-          Bimbel Langkah Juara Makassar &bull; Portal Belajar v1.0 &bull; Dibuat sesuai PRD Resmi
+          Bimbel Langkah Juara Makassar &bull; Portal Belajar v1.0
         </div>
       </footer>
     </div>
